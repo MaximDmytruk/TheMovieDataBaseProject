@@ -1,4 +1,7 @@
-
+// This file was generated from JSON Schema using quicktype, do not modify it directly.
+// To parse the JSON, add this file to your project and do:
+//
+//   let topTvTrendingTvSeriesJSONModel = try? JSONDecoder().decode(TopTvTrendingTvSeriesJSONModel.self, from: jsonData)
 
 import Foundation
 
@@ -23,7 +26,7 @@ struct TopTvResult: Codable {
     let backdropPath: String?
     let id: Int?
     let name: String?
-    let originalLanguage: TopTvOriginalLanguage?
+    let originalLanguage: String?
     let originalName: String?
     let overview: String?
     let posterPath: String?
@@ -56,11 +59,4 @@ struct TopTvResult: Codable {
 
 enum TopTvMediaType: String, Codable {
     case tv = "tv"
-}
-
-enum TopTvOriginalLanguage: String, Codable {
-    case en = "en"
-    case es = "es"
-    case ja = "ja"
-    case zh = "zh"
 }
