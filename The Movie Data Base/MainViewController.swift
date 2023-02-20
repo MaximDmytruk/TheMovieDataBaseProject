@@ -41,9 +41,6 @@ class MainViewController: UIViewController {
             guard let self = self else { return }
             guard let result = data.value?.results else { return }
             
-            print("fiiiiiiiiilm")
-            print("")
-            
             for id in result  {
                 self.filmsId.append(id.id ?? 111111)
             }
@@ -56,18 +53,13 @@ class MainViewController: UIViewController {
         AF.request(NetworkManager().getTopTvSeries).responseDecodable(of:TrendingTvSeriesJSONModel.self) { [weak self] data in
             
             guard let self = self else { return }
-            print("tvvvvvvvvvvvvvvvvvvv")
             guard let result = data.value?.results else { return }
-            print("twwwwwwwwwwwwww")
-            print("")
-           
+         
             for id in result {
                 self.tvSeriesId.append(id.id ?? 11111)
             }
             for index in self.tvSeriesId {
                 self.getTvSeries(id: index)
-                print("start downloadtvseries ")
-                print("")
             }
         }
     }
@@ -200,58 +192,7 @@ extension MainViewController:UITableViewDataSource, UITableViewDelegate {
 extension MainViewController:UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        //        if searchText != "" {
-        //            searchStart = true
-        //            switch categorySegmentedControl.selectedSegmentIndex {
-        //            case 0:
-        //                //Movie
-        //                searchFilms = []
-        //                searchFilmsId = []
-        //                AF.request(NetworkManager().searchMovie(name: searchText)).responseDecodable(of:SearchMovieJSONModel.self) { [weak self] data in
-        //                    guard let self = self else { return }
-        //                    guard let result = data.value?.results else { return }
-        //                    for id in result {
-        //                        self.searchFilmsId.append(id.id ?? 000000)
-        //                    }
-        //                    for index in self.searchFilmsId {
-        //                        AF.request(NetworkManager().getMovieURL(with: index)).responseDecodable(of:MovieJSONModel.self) {[weak self] data in
-        //                            guard let self = self else { return }
-        //                            if let movie = data.value {
-        //                                self.searchFilms.append(movie)
-        //                            } else { print("someProblem") }
-        //                            self.tableView.reloadData()
-        //                        }
-        //                    }
-        //                }
-        //            case 1:
-        //                //TvSeries
-        //                searchTvSeries = []
-        //                searchTvSeriesId = []
-        //                AF.request(NetworkManager().searchTvSeries(name: searchText)).responseDecodable(of:SearchTvSeriesJSONModel.self) { [weak self] data in
-        //                    guard let self = self else { return }
-        //                    guard let result = data.value?.results else { return }
-        //                    for id in result {
-        //                        self.searchTvSeriesId.append(id.id ?? 000000)
-        //                        print("\(NetworkManager().searchTvSeries(name: searchText))")
-        //                    }
-        //                    for index in self.searchTvSeriesId {
-        //                        AF.request(NetworkManager().getTvSeriesURL(with: index)).responseDecodable(of:TvSeriesJSONModel.self) {[weak self] data in
-        //                            guard let self = self else { return }
-        //                            if let tvSeries = data.value {
-        //                                self.searchTvSeries.append(tvSeries)
-        //                            } else { print("someProblem") }
-        //                            self.tableView.reloadData()
-        //                        }
-        //                    }
-        //                }
-        //            default: return
-        //
-        //            }
-        //        } else { searchStart = false }
-        //
-        //
-        //
+    
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

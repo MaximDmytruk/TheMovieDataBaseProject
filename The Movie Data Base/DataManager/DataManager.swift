@@ -9,7 +9,8 @@ import Foundation
 
 class DataManager {
     
-    var userDefaults = UserDefaults()
+    private var userDefaults = UserDefaults()
+    
     static var movieArray: [MovieJSONModel] = []
     static var tvArray: [TvSeriesJSONModel] = []
     
@@ -20,16 +21,17 @@ class DataManager {
         guard let movie = delegate?.saveDataMovie() else{return}
         DataManager.movieArray.append(movie)
     
-//        do {
-//            let encoder = JSONEncoder()
-//            //var arrayMovie = DataManager.movieArray
-//            let data = try? encoder.encode(DataManager.movieArray)
-//            userDefaults.set(data, forKey: "Movies")
-//            print("Save ok!")
-//        } catch  {
-//            print("Error = \(error)")
-//        }
+        //Записали у юзер дату масив movieArray
+        do {
+            let encoder = JSONEncoder()
+            let data = try? encoder.encode(DataManager.movieArray)
+            userDefaults.set(data, forKey: "Movies")
+            print("Save ok!")
+        } catch  {
+            print("Error = \(error)")
+        }
     }
+    
     func saveTvDataInManger(){
     
         guard let tv = delegate?.saveDataTv() else{return}
@@ -38,8 +40,18 @@ class DataManager {
     
     func exportDataFromManager() {
         delegate?.exportData(movies: DataManager.tvArray)
-        delegate?.exportData(movies: DataManager.movieArray)
-       
+        
+        //експортуємо дані з дати 
+        guard let data = userDefaults.data(forKey: "Movies") else { return }
+        do {
+            let decoder = JSONDecoder()
+            let movie:[MovieJSONModel] = try decoder.decode([MovieJSONModel].self, from: data)
+            print("export ok ")
+            delegate?.exportData(movies: movie)
+        } catch  {
+            print("Unable to decode movie (\(error) ")
+        }
+        
     }
     
 }
