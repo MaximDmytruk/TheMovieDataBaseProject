@@ -24,6 +24,8 @@ class SecondViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.layer.cornerRadius = 20
+        
         dataBase.delegate = self
         dataBase.exportDataFromManager()
        
@@ -84,7 +86,6 @@ extension SecondViewController:UITableViewDataSource {
 extension SecondViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let detailViewController = storyboard?.instantiateViewController(identifier: "DetailsViewController") as? DetailsViewController else { return }
-        
         
         switch categorySegmentedControl.selectedSegmentIndex {
         case 0:

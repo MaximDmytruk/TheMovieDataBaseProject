@@ -73,7 +73,7 @@ class MainViewController: UIViewController {
         tableView.reloadData()
     }
     
-    //MARK: - Function AF request
+    //MARK: - Functions AF request
     func getFilm (id index:Int){
         AF.request(NetworkManager().getMovieURL(with: index)).responseDecodable(of:MovieJSONModel.self) { [weak self] data in
             guard let self = self else { return }
@@ -181,9 +181,9 @@ extension MainViewController:UITableViewDataSource, UITableViewDelegate {
                 detailViewController.configureDetail(result: searchTvSeries[indexPath.row])
                 navigationController?.pushViewController(detailViewController, animated: true)
             default: break
-                
             }
         }
+        
     }
     
 }
@@ -192,8 +192,8 @@ extension MainViewController:UITableViewDataSource, UITableViewDelegate {
 extension MainViewController:UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    
     }
+    
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
@@ -261,6 +261,6 @@ extension MainViewController:UISearchBarDelegate {
         searchBar.text = ""
         searchStart = false
         tableView.reloadData()
-        print("cancel")
+        print("pressed cancel")
     }
 }

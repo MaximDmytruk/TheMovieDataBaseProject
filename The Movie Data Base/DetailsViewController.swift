@@ -40,13 +40,11 @@ class DetailsViewController: UIViewController {
         
         self.posterImage.sd_setImage(with: URL(string: posterStringPath))
         self.backdropImageView.sd_setImage(with: URL(string: backdropStringPath))
-        
-       
     }
     
+    //MARK: Button "Save" pressed
     @IBAction func savePressed(_ sender: Any) {
         if filmObject != nil {
-            
             let dataBase = DataManager()
             dataBase.delegate = self
             dataBase.saveFilmDataInManger()
@@ -55,7 +53,6 @@ class DetailsViewController: UIViewController {
             dataBase.delegate = self
             dataBase.saveTvDataInManger()
         }
-     
     }
     
     
@@ -93,7 +90,7 @@ class DetailsViewController: UIViewController {
         if  let pathOfPoster = result.posterPath {
             self.posterStringPath = NetworkManager().basicImageURL + pathOfPoster
         }
-        
+
         //MARK: - Set BackDropImageView
         if let backDropPath = result.backdropPath {
             self.backdropStringPath = NetworkManager().basicImageURL + backDropPath
@@ -113,7 +110,6 @@ extension DetailsViewController:DataManagerDelegate {
         return tvSeriaObject!
     }
     func exportData(movies:[Any]) {
-        
     }
 }
 
