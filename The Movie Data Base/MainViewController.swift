@@ -15,10 +15,9 @@ class MainViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var filmsArray:[MovieJSONModel] = []
-    var filmsId:[Int] = []
     
     var tvSeriesArray:[TvSeriesJSONModel] = []
-    var tvSeriesId:[Int] = []
+    
     
     var searchFilmsId:[Int] = []
     var searchFilms:[MovieJSONModel] = []
@@ -32,36 +31,12 @@ class MainViewController: UIViewController {
         searchBar.layer.cornerRadius = 15
         tableView.layer.cornerRadius = 20
         categorySegmentedControl.selectedSegmentIndex = 0
-    
+        
         tableView.register(UINib(nibName: "CustomTableViewCell", bundle: nil), forCellReuseIdentifier: "CustomTableViewCell")
         
-        //MARK: - Download IDs Films
-        AF.request(NetworkManager().getTopFilms).responseDecodable(of:TrendingMoviesJSONModel.self) {
-            [weak self] data in
-            guard let self = self else { return }
-            guard let result = data.value?.results else { return }
-            
-            for id in result  {
-                self.filmsId.append(id.id ?? 111111)
-            }
-            for index in self.filmsId {
-                self.getFilm(id: index)
-            }
-        }
+        getFilmTranding()
+        getTvTrending()
         
-        //MARK: - Download IDs Series
-        AF.request(NetworkManager().getTopTvSeries).responseDecodable(of:TrendingTvSeriesJSONModel.self) { [weak self] data in
-            
-            guard let self = self else { return }
-            guard let result = data.value?.results else { return }
-         
-            for id in result {
-                self.tvSeriesId.append(id.id ?? 11111)
-            }
-            for index in self.tvSeriesId {
-                self.getTvSeries(id: index)
-            }
-        }
     }
     
     
@@ -73,26 +48,6 @@ class MainViewController: UIViewController {
         tableView.reloadData()
     }
     
-    //MARK: - Functions AF request
-    func getFilm (id index:Int){
-        AF.request(NetworkManager().getMovieURL(with: index)).responseDecodable(of:MovieJSONModel.self) { [weak self] data in
-            guard let self = self else { return }
-            if let movie = data.value {
-                self.filmsArray.append(movie)
-            } else { print("someProblem") }
-            self.tableView.reloadData()
-        }
-    }
-    
-    func getTvSeries(id index:Int) {
-        AF.request(NetworkManager().getTvSeriesURL(with: index)).responseDecodable(of:TvSeriesJSONModel.self) {[weak self] data in
-            guard let self = self else { return }
-            if let tvSeries = data.value {
-                self.tvSeriesArray.append(tvSeries)
-            } else { print("someProblem") }
-            self.tableView.reloadData()
-        }
-    }
 }
 
 
@@ -111,19 +66,18 @@ extension MainViewController:UITableViewDataSource, UITableViewDelegate {
             }
         } else {
             switch categorySegmentedControl.selectedSegmentIndex {
-        case 0:
-            return searchFilms.count
-        case 1:
-            return searchTvSeries.count
-        default:
-            return 100
-        }
+            case 0:
+                return searchFilms.count
+            case 1:
+                return searchTvSeries.count
+            default:
+                return 100
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell", for: indexPath) as? CustomTableViewCell else { return UITableViewCell() }
-        
         cell.selectionStyle = .none
         
         if searchStart == false {
@@ -240,7 +194,7 @@ extension MainViewController:UISearchBarDelegate {
                 guard let result = data.value?.results else { return }
                 for id in result {
                     self.searchTvSeriesId.append(id.id ?? 000000)
-
+                    
                 }
                 for index in self.searchTvSeriesId {
                     AF.request(NetworkManager().getTvSeriesURL(with: index)).responseDecodable(of:TvSeriesJSONModel.self) {[weak self] data in
@@ -262,5 +216,67 @@ extension MainViewController:UISearchBarDelegate {
         searchStart = false
         tableView.reloadData()
         print("pressed cancel")
+    }
+}
+
+//MARK: - Functions AlamoFire request
+extension MainViewController {
+    
+    func getFilmTranding(){
+        var filmsId:[Int] = []
+        let url = NetworkManager().getTopFilms
+        
+        AF.request(url).responseDecodable(of:TrendingMoviesJSONModel.self) {
+            [weak self] data in
+            guard let self = self else { return }
+            guard let result = data.value?.results else { return }
+            
+            for id in result  {
+                filmsId.append(id.id ?? 111111)
+            }
+            for index in filmsId {
+                self.getFilm(id: index)
+            }
+        }
+    }
+    
+    func getFilm (id index:Int){
+        let url = NetworkManager().getMovieURL(with: index)
+        
+        AF.request(url).responseDecodable(of:MovieJSONModel.self) { [weak self] data in
+            guard let self = self else { return }
+            if let movie = data.value {
+                self.filmsArray.append(movie)
+            } else { print("someProblem") }
+            self.tableView.reloadData()
+        }
+    }
+    
+    func getTvTrending(){
+        var tvSeriesId:[Int] = []
+        let url = NetworkManager().getTopTvSeries
+        
+        AF.request(url).responseDecodable(of:TrendingTvSeriesJSONModel.self) { [weak self] data in
+            guard let self = self else { return }
+            guard let result = data.value?.results else { return }
+            for id in result {
+                tvSeriesId.append(id.id ?? 11111)
+            }
+            for index in tvSeriesId {
+                self.getTvSeries(id: index)
+            }
+        }
+    }
+    
+    func getTvSeries(id index:Int) {
+        let url = NetworkManager().getTvSeriesURL(with: index)
+        
+        AF.request(url).responseDecodable(of:TvSeriesJSONModel.self) {[weak self] data in
+            guard let self = self else { return }
+            if let tvSeries = data.value {
+                self.tvSeriesArray.append(tvSeries)
+            } else { print("someProblem") }
+            self.tableView.reloadData()
+        }
     }
 }

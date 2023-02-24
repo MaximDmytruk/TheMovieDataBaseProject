@@ -12,12 +12,8 @@ class SecondViewController: UIViewController {
     @IBOutlet weak var categorySegmentedControl: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
     
-    
     var filmsArray:[MovieJSONModel] = []
-    var filmsId:[Int] = []
-    
     var tvSeriesArray:[TvSeriesJSONModel] = []
-    var tvSeriesId:[Int] = []
     
     var dataBase = DataManager()
     
@@ -39,11 +35,8 @@ class SecondViewController: UIViewController {
         tableView.reloadData()
         
     }
-    
-    @IBAction func changeCategoryAction(_ sender: UISegmentedControl) {
-        tableView.reloadData()
-        
-    }
+    //MARK: - Category Segmented Control Action
+    @IBAction func changeCategoryAction(_ sender: UISegmentedControl) { tableView.reloadData() }
 }
 
 extension SecondViewController:UITableViewDataSource {
@@ -61,7 +54,6 @@ extension SecondViewController:UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell", for: indexPath) as? CustomTableViewCell else { return UITableViewCell() }
-        
         cell.selectionStyle = .none
         
         switch categorySegmentedControl.selectedSegmentIndex {
@@ -79,9 +71,7 @@ extension SecondViewController:UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         200
     }
-    
 }
-
 
 extension SecondViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -100,20 +90,15 @@ extension SecondViewController: UITableViewDelegate {
 }
 
 extension SecondViewController:DataManagerDelegate {
-    func saveDataMovie() -> MovieJSONModel? {
-        return filmsArray[0]
-    }
     
-    func saveDataTv() -> TvSeriesJSONModel? {
-        return tvSeriesArray[0]
-    }
+    func saveDataMovie() -> MovieJSONModel? { return filmsArray[0] } /// never use
+    func saveDataTv() -> TvSeriesJSONModel? { return tvSeriesArray[0] } /// never use
     
     func exportData(movies:[Any]){
-        
         if movies is [MovieJSONModel] {
             filmsArray = movies as! [MovieJSONModel]
         }
-         if movies is [TvSeriesJSONModel] {
+        if movies is [TvSeriesJSONModel] {
             tvSeriesArray = movies as! [TvSeriesJSONModel]
         }
     }

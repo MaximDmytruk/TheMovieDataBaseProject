@@ -9,13 +9,10 @@ import UIKit
 
 class DetailsViewController: UIViewController {
     
-    
-    
     @IBOutlet weak var posterImage: UIImageView!
     @IBOutlet weak var backdropImageView: UIImageView!
     @IBOutlet weak var yearLabel: UILabel!
     @IBOutlet weak var titleFilm: UILabel!
-    
     @IBOutlet weak var descriptionLabel: UILabel!
     
     var name = ""
@@ -31,9 +28,8 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         posterImage.layer.cornerRadius = 5
-   
+        
         self.titleFilm.text = name
         self.yearLabel.text = year
         self.descriptionLabel.text = descriptionFilm
@@ -55,63 +51,54 @@ class DetailsViewController: UIViewController {
         }
     }
     
-    
-    func configureDetail(result:MovieJSONModel) {
-       
-        filmObject = result
-        
-        //MARK: - Set Labels
-        self.name = result.title ?? result.originalTitle ?? "Unknow"
-        self.year = result.releaseDate ?? "Unknow"
-        self.descriptionFilm = result.overview ?? "Unknow"
-        
-        //MARK: - Set ImageView
-        if  let pathOfPoster = result.posterPath {
-            self.posterStringPath = NetworkManager().basicImageURL + pathOfPoster
+    //MARK: - Config the cell
+    func configureDetail(result:Any) {
+        if let object = result as? MovieJSONModel {
+            
+            filmObject = object
+            
+            /// - Set Labels
+            self.name = object.title ?? object.originalTitle ?? "Unknow"
+            self.year = object.releaseDate ?? "Unknow"
+            self.descriptionFilm = object.overview ?? "Unknow"
+            
+            /// - Set ImageView
+            if  let pathOfPoster = object.posterPath {
+                self.posterStringPath = NetworkManager().basicImageURL + pathOfPoster
+            }
+            
+            /// - Set BackDropImageView
+            if let backDropPath = object.backdropPath {
+                self.backdropStringPath = NetworkManager().basicImageURL + backDropPath
+            }
+            
+        } else if let object = result as? TvSeriesJSONModel {
+            
+            tvSeriaObject = object
+            
+           /// - Set Labels
+            self.name = object.name ?? object.originalName ?? "Unknow"
+            self.year = object.firstAirDate ?? "Unknow"
+            self.descriptionFilm = object.overview ?? "Unknow"
+            
+            /// - Set ImageView
+            if  let pathOfPoster = object.posterPath {
+                self.posterStringPath = NetworkManager().basicImageURL + pathOfPoster
+            }
+            
+            /// - Set BackDropImageView
+            if let backDropPath = object.backdropPath {
+                self.backdropStringPath = NetworkManager().basicImageURL + backDropPath
+            }
         }
-        
-        //MARK: - Set BackDropImageView
-        if let backDropPath = result.backdropPath {
-            self.backdropStringPath = NetworkManager().basicImageURL + backDropPath
-        }
-        
     }
-    
-    func configureDetail(result:TvSeriesJSONModel) {
-        
-        tvSeriaObject = result
-       
-        //MARK: - Set Labels
-        self.name = result.name ?? result.originalName ?? "Unknow"
-        self.year = result.firstAirDate ?? "Unknow"
-        self.descriptionFilm = result.overview ?? "Unknow"
-        
-        //MARK: - Set ImageView
-        if  let pathOfPoster = result.posterPath {
-            self.posterStringPath = NetworkManager().basicImageURL + pathOfPoster
-        }
-
-        //MARK: - Set BackDropImageView
-        if let backDropPath = result.backdropPath {
-            self.backdropStringPath = NetworkManager().basicImageURL + backDropPath
-        }
-
-    }
-    
 }
-
 
 extension DetailsViewController:DataManagerDelegate {
-    
-    func saveDataMovie() -> MovieJSONModel? {
-        return filmObject!
-    }
-    func saveDataTv() -> TvSeriesJSONModel? {
-        return tvSeriaObject!
-    }
-    func exportData(movies:[Any]) {
-    }
+    func saveDataMovie() -> MovieJSONModel? { return filmObject! }
+    func saveDataTv() -> TvSeriesJSONModel? { return tvSeriaObject! }
+    func exportData(movies:[Any]) {}
 }
 
-    
-    
+
+
